@@ -1,0 +1,10 @@
+{
+  "name": "@trip-planner/trip-planner-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@trip-planner/trip-planner"
+    ]
+  }
+}
