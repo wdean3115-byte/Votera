@@ -11,7 +11,10 @@ export function TwoCardSection({
   replies: string[];
 }) {
   return (
-    <section className="section-bg-1 relative left-1/2 mt-0 min-h-[120vh] w-screen -translate-x-1/2 snap-start snap-stop-always px-10 py-24 sm:px-14 lg:px-20">
+    <section
+      id="how"
+      className="section-bg-1 relative left-1/2 mt-0 min-h-[120vh] w-screen -translate-x-1/2 snap-start snap-stop-always px-10 py-24 sm:px-14 lg:px-20"
+    >
       <div className="reveal grid gap-6" data-reveal>
         <div className="rounded-[28px] bg-white/90 p-8 shadow-[0_18px_50px_rgba(0,0,0,0.08)]">
           <h2 className="text-6xl font-light leading-[0.92] tracking-tight sm:text-7xl">

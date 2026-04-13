@@ -4,7 +4,7 @@ export function Header() {
       <div className="mx-auto flex w-full items-center px-6 py-4 text-white">
         <nav className="hidden flex-1 items-center gap-6 text-sm font-medium text-white/80 md:flex">
           <a className="transition hover:text-white" href="#how">
-            Creators
+            How it works
           </a>
           <a className="transition hover:text-white" href="#groups">
             Features

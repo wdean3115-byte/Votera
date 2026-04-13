@@ -9,7 +9,7 @@ export function HeroSection({ options }: { options: Option[] }) {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.6),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(0,0,0,0.1),transparent_50%)]" />
 
       <div className="relative grid min-h-[70vh] items-end gap-12 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="animate-rise text-white">
+        <div className="reveal text-white delay-100" data-reveal>
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/70">
             Votera for groups
           </p>
@@ -30,7 +30,10 @@ export function HeroSection({ options }: { options: Option[] }) {
         </div>
 
         <div className="relative">
-          <div className="animate-fade-up-delay relative rounded-[28px] border border-black/10 bg-white/95 p-6 text-black shadow-[0_25px_60px_rgba(0,0,0,0.18)]">
+          <div
+            className="reveal relative rounded-[28px] border border-black/10 bg-white/95 p-6 text-black shadow-[0_25px_60px_rgba(0,0,0,0.18)] delay-150"
+            data-reveal
+          >
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black/45">
@@ -65,7 +68,10 @@ export function HeroSection({ options }: { options: Option[] }) {
             </div>
           </div>
 
-          <div className="animate-fade-up-delay-long absolute -right-8 -top-6 hidden w-56 rounded-3xl bg-white/95 p-4 text-sm text-black shadow-[0_20px_40px_rgba(0,0,0,0.2)] lg:block">
+          <div
+            className="reveal absolute -right-10 -top-16 hidden w-56 rounded-3xl bg-white/95 p-4 text-sm text-black shadow-[0_20px_40px_rgba(0,0,0,0.2)] delay-300 lg:block"
+            data-reveal
+          >
             <p className="font-semibold">Decision closed</p>
             <p className="mt-1 text-black/60">Burger won with 4 votes.</p>
           </div>
