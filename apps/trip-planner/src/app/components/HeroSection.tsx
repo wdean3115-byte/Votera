@@ -10,20 +10,20 @@ export function HeroSection({ options }: { options: Option[] }) {
 
       <div className="relative grid min-h-[70vh] items-end gap-12 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="reveal text-white delay-100" data-reveal>
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/70">
+          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-white/70">
             Votera for groups
           </p>
-          <h1 className="mt-6 text-6xl font-light leading-[0.9] tracking-tight sm:text-7xl lg:text-[92px]">
-            Complete creative control
+          <h1 className="mt-6 text-7xl font-light leading-[0.88] tracking-tight sm:text-[88px] lg:text-[112px]">
+            Make group decisions feel effortless
           </h1>
-          <p className="mt-6 max-w-2xl text-xl text-white/80 sm:text-2xl">
+          <p className="mt-7 max-w-2xl text-2xl leading-9 text-white/82 sm:text-[30px] sm:leading-[1.35]">
             Votera helps friends, teams, and trips decide faster with simple voting and clear results.
           </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <button className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-black">
+          <div className="mt-12 flex flex-wrap gap-4">
+            <button className="rounded-full bg-white px-8 py-4 text-base font-semibold text-black shadow-[0_14px_40px_rgba(255,255,255,0.16)]">
               Start deciding
             </button>
-            <button className="rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white">
+            <button className="rounded-full border border-white/60 px-8 py-4 text-base font-semibold text-white">
               See how it works
             </button>
           </div>
