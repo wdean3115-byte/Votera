@@ -59,7 +59,7 @@ export function Footer() {
           <span>LinkedIn</span>
         </div>
         <div className="flex items-center justify-start text-white/60 lg:justify-end">
-           © Votera
+          © Votera
         </div>
       </div>
     </footer>
