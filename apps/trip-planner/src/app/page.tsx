@@ -1,13 +1,13 @@
 'use client';
 
-import { CtaSection } from './components/CtaSection';
-import { DarkSection } from './components/DarkSection';
-import { Footer } from './components/Footer';
-import { GroupsSection } from './components/GroupsSection';
-import { Header } from './components/Header';
-import { HeroSection } from './components/HeroSection';
-import { TwoCardSection } from './components/TwoCardSection';
-import { useReveal } from './components/useReveal';
+import { CtaSection } from './components/landing/CtaSection';
+import { DarkSection } from './components/landing/DarkSection';
+import { Footer } from './components/landing/Footer';
+import { GroupsSection } from './components/landing/GroupsSection';
+import { Header } from './components/landing/Header';
+import { HeroSection } from './components/landing/HeroSection';
+import { TwoCardSection } from './components/landing/TwoCardSection';
+import { useReveal } from './components/landing/useReveal';
 
 export default function LandingPage() {
   useReveal();
@@ -46,19 +46,12 @@ export default function LandingPage() {
       tone: 'bg-[#f4efe8]',
     },
   ];
-
-  const options = [
-    { emoji: '🍜', label: 'Ramen' },
-    { emoji: '🍔', label: 'Burger' },
-    { emoji: '🍕', label: 'Pizza' },
-  ];
-
   return (
     <div className="min-h-screen bg-[#f7f5f2] text-[#0b0b0b]">
       <Header />
 
       <main className="w-full max-w-none px-12 pb-0 snap-y snap-proximity scroll-smooth">
-        <HeroSection options={options} />
+        <HeroSection />
         <TwoCardSection steps={steps} replies={replies} />
         <DarkSection />
         <GroupsSection useCases={useCases} />
@@ -68,3 +61,4 @@ export default function LandingPage() {
     </div>
   );
 }
+

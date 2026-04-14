@@ -1,4 +1,8 @@
+'use client';
+
+import type { FormEvent } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const socialButtons = [
   { label: 'Continue with Google', icon: 'G' },
@@ -7,6 +11,17 @@ const socialButtons = [
 ];
 
 export function SignupForm() {
+  const router = useRouter();
+
+  const handleContinue = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    router.push('/user');
+  };
+
+  const handleSocial = () => {
+    router.push('/user');
+  };
+
   return (
     <section className="relative flex min-h-screen items-center justify-center px-6 py-16 sm:px-10 lg:px-16">
       <Link
@@ -30,6 +45,7 @@ export function SignupForm() {
             <button
               key={button.label}
               type="button"
+              onClick={handleSocial}
               className="flex w-full items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white px-5 py-3.5 text-sm font-semibold text-black transition hover:-translate-y-0.5 hover:bg-white/95"
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-xs font-bold text-white">
@@ -46,7 +62,7 @@ export function SignupForm() {
           <div className="h-px flex-1 bg-white/10" />
         </div>
 
-        <form className="space-y-3">
+        <form className="space-y-3" onSubmit={handleContinue}>
           <input
             id="email"
             type="email"
