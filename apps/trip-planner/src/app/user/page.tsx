@@ -1,6 +1,105 @@
+'use client';
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+type SavedVote = {
+  title: string;
+  options: string[];
+  sourceLabel?: string;
+  participantCount?: number;
+  expiresAt?: number;
+  createdAt: number;
+  optionVotes?: { id: string; votes: number }[];
+  selectedOptionId?: string | null;
+  status?: "active" | "ended";
+};
+
+function formatRemainingTime(ms: number) {
+  if (ms <= 0) return "Ended";
+
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
 
 export default function UserPage() {
+  const router = useRouter();
+  const [voteHistory, setVoteHistory] = useState<SavedVote[]>([]);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const raw = localStorage.getItem("votera:lastVote");
+    const rawHistory = localStorage.getItem("votera:voteHistory");
+
+    try {
+      const parsedHistory = JSON.parse(rawHistory ?? "[]");
+      if (Array.isArray(parsedHistory)) {
+        setVoteHistory(parsedHistory);
+      }
+    } catch {
+      // ignore parse errors
+    }
+
+    if (!raw) return;
+  }, []);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  const openVote = (vote: SavedVote) => {
+    localStorage.setItem("votera:lastVote", JSON.stringify(vote));
+    router.push("/spaces/tarot");
+  };
+
+  const handleDeleteVote = (voteToDelete: SavedVote) => {
+    const nextHistory = voteHistory.filter(
+      (vote) =>
+        !(
+          vote.createdAt === voteToDelete.createdAt &&
+          vote.title === voteToDelete.title &&
+          vote.sourceLabel === voteToDelete.sourceLabel
+        )
+    );
+
+    setVoteHistory(nextHistory);
+    localStorage.setItem("votera:voteHistory", JSON.stringify(nextHistory));
+
+    const rawActiveVote = localStorage.getItem("votera:lastVote");
+    if (!rawActiveVote) return;
+
+    try {
+      const activeVote: SavedVote = JSON.parse(rawActiveVote);
+      const deletingActiveVote =
+        activeVote.createdAt === voteToDelete.createdAt &&
+        activeVote.title === voteToDelete.title &&
+        activeVote.sourceLabel === voteToDelete.sourceLabel;
+
+      if (deletingActiveVote) {
+        if (nextHistory[0]) {
+          localStorage.setItem("votera:lastVote", JSON.stringify(nextHistory[0]));
+        } else {
+          localStorage.removeItem("votera:lastVote");
+        }
+        return;
+      }
+    } catch {
+      if (nextHistory[0]) {
+        localStorage.setItem("votera:lastVote", JSON.stringify(nextHistory[0]));
+      } else {
+        localStorage.removeItem("votera:lastVote");
+      }
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#0b0b12] text-white">
       <div className="relative">
@@ -32,16 +131,6 @@ export default function UserPage() {
                 </button>
               ))}
             </nav>
-            <div className="mt-10 rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-white/60">
-              Weekly streak
-              <div className="mt-3 flex gap-2">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <span key={index} className="h-2 w-2 rounded-full bg-amber-300/70" />
-                ))}
-                <span className="h-2 w-2 rounded-full bg-white/20" />
-                <span className="h-2 w-2 rounded-full bg-white/20" />
-              </div>
-            </div>
           </aside>
 
           <div className="space-y-6">
@@ -54,7 +143,6 @@ export default function UserPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <h1 className="text-2xl font-semibold">Tushi</h1>
-                      <span className="rounded-full border border-white/10 bg-black/40 px-2 py-1 text-xs text-white/60">Pro</span>
                     </div>
                     <p className="text-sm text-white/60">Creative traveler · Decision maker</p>
                     <div className="mt-4 flex flex-wrap gap-3 text-xs uppercase tracking-[0.25em] text-white/50">
@@ -71,12 +159,62 @@ export default function UserPage() {
                   >
                     Edit profile
                   </Link>
-                  <button className="rounded-full border border-white/10 bg-white/90 px-4 py-2 text-xs uppercase tracking-[0.3em] text-black">
-                    Find people
-                  </button>
                 </div>
               </div>
             </header>
+
+            <section className="rounded-[28px] border border-white/10 bg-gradient-to-br from-amber-300/10 via-white/5 to-transparent p-6 shadow-[0_24px_80px_rgba(0,0,0,0.3)]">
+              <div className="max-w-2xl">
+                <p className="text-xs uppercase tracking-[0.38em] text-amber-200/65">Vote Ready</p>
+              </div>
+
+              {voteHistory.length > 0 && (
+                <div className="mt-6 space-y-3">
+                  {voteHistory.map((vote) => (
+                    <div
+                      key={`${vote.createdAt}-${vote.title}`}
+                      className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4"
+                    >
+                      <div className="mb-3 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.24em] text-white/55">
+                        <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1.5">
+                          {vote.status === "ended" || (vote.expiresAt ?? vote.createdAt + 30 * 60 * 1000) <= now
+                            ? "Ended"
+                            : formatRemainingTime((vote.expiresAt ?? vote.createdAt + 30 * 60 * 1000) - now)}
+                        </span>
+                        <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1.5">
+                          {(vote.optionVotes ?? []).reduce((sum, option) => sum + option.votes, 0)}/
+                          {Math.max(1, vote.participantCount ?? 1)} voted
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.3em] text-amber-100/65">
+                            {vote.sourceLabel || "Unknown space"}
+                          </p>
+                          <h3 className="mt-2 text-lg font-semibold text-white">{vote.title}</h3>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => openVote(vote)}
+                            className="rounded-full border border-white/10 bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-black"
+                          >
+                            Open vote
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteVote(vote)}
+                            className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/75 transition hover:border-white/25 hover:bg-white/10"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
 
             <section className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
               <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">

@@ -11,6 +11,21 @@ type TarotOptionCardProps = {
 };
 
 export function TarotOptionCard({ option, percent, active, onSelect }: TarotOptionCardProps) {
+  const accentClass =
+    option.sigil === "sun"
+      ? "from-amber-300/60 via-yellow-100/40 to-orange-300/40"
+      : option.sigil === "bolt"
+        ? "from-sky-300/55 via-cyan-100/35 to-violet-300/35"
+        : option.sigil === "gem"
+          ? "from-emerald-300/55 via-teal-100/35 to-cyan-300/35"
+          : "from-rose-300/55 via-amber-100/35 to-lime-200/35";
+  const titleClass =
+    option.title.length > 26
+      ? "text-base leading-6 sm:text-lg"
+      : option.title.length > 18
+        ? "text-lg leading-7 sm:text-[1.15rem]"
+        : "text-xl leading-8 sm:text-2xl";
+
   const renderSigil = () => {
     switch (option.sigil) {
       case "sun":
@@ -79,10 +94,10 @@ export function TarotOptionCard({ option, percent, active, onSelect }: TarotOpti
   return (
     <button
       onClick={onSelect}
-      className={`group relative aspect-[3/5] w-full overflow-hidden rounded-[28px] border p-4 text-left transition ${
+      className={`group relative aspect-[3/5] w-full overflow-hidden rounded-[30px] border p-4 text-left transition duration-300 ${
         active
-          ? "border-amber-300/80 shadow-[0_0_40px_rgba(251,191,36,0.45)] ring-2 ring-amber-300/60"
-          : "border-white/10 hover:border-white/30"
+          ? "border-amber-300/80 shadow-[0_18px_60px_rgba(251,191,36,0.28)] ring-2 ring-amber-300/60"
+          : "border-white/10 shadow-[0_18px_45px_rgba(0,0,0,0.28)] hover:-translate-y-1 hover:border-white/30 hover:shadow-[0_24px_55px_rgba(0,0,0,0.34)]"
       }`}
     >
       {active && (
@@ -92,9 +107,13 @@ export function TarotOptionCard({ option, percent, active, onSelect }: TarotOpti
         </>
       )}
       <div className="absolute inset-0 bg-[#f5efe1]" />
+      <div className={`absolute inset-0 bg-gradient-to-br ${accentClass} opacity-70`} />
+      <div className="absolute inset-x-6 top-4 h-px bg-gradient-to-r from-transparent via-[#7e6c4f]/70 to-transparent" />
+      <div className="absolute inset-x-6 bottom-4 h-px bg-gradient-to-r from-transparent via-[#7e6c4f]/70 to-transparent" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.55),transparent_45%)]" />
       <div className="pointer-events-none absolute inset-2 rounded-[22px] border-2 border-[#c4b8a2]" />
       <div className="pointer-events-none absolute inset-3 rounded-[18px] border-2 border-[#e7dcc7]" />
+      <div className="pointer-events-none absolute inset-[18px] rounded-[16px] bg-[linear-gradient(180deg,rgba(255,255,255,0.2),transparent_18%,transparent_82%,rgba(69,56,35,0.1))]" />
       <div className="pointer-events-none absolute left-4 top-4 text-sm font-semibold text-[#2b2a26]">
         {option.rank}
       </div>
@@ -114,28 +133,27 @@ export function TarotOptionCard({ option, percent, active, onSelect }: TarotOpti
       )}
 
       <div className="relative flex h-full flex-col justify-between font-serif text-[#2b2a26]">
-        <div className="flex items-start justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-[#2b2a26]/70">&nbsp;</h3>
+        <div className="mt-4 flex flex-1 flex-col items-center justify-center gap-5">
+          <div className="max-w-[13rem] px-4 py-2 text-center">
+            <h3 className={`${titleClass} text-balance font-semibold tracking-[0.02em] text-[#2b2a26]`}>
+              {option.title}
+            </h3>
           </div>
-        </div>
 
-                        <div className="mt-4 flex flex-1 items-center justify-center">
-                          <div className="flex h-36 w-24 items-center justify-center rounded-[18px] border border-[#c9bfae] bg-[#e9e0cf] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08)]">
-                            {renderSigil()}
-                          </div>
-                        </div>
-
-        <div className="mt-4">
-          <div className="text-center text-[11px] uppercase tracking-[0.35em] text-[#5c564b]">
-            Arcana
-          </div>
-          <div className="mt-2 rounded-full border border-[#c9bfae] px-3 py-1 text-center text-[11px] uppercase tracking-[0.4em] text-[#4a4439]">
-            Decision
+          <div className="relative flex h-32 w-24 items-center justify-center rounded-[22px] border border-[#b8a27d] bg-[linear-gradient(180deg,#efe5d3,#e5d9c3)] shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_22px_rgba(79,60,30,0.12)]">
+            <div className="absolute inset-2 rounded-[16px] border border-[#d3c5ad]" />
+            {renderSigil()}
           </div>
         </div>
 
         <div className="mt-4">
+          <div className="mx-auto max-w-[11rem] rounded-full border border-[#c9bfae] bg-[rgba(255,248,236,0.65)] px-3 py-1.5 text-center text-[11px] uppercase tracking-[0.38em] text-[#4a4439] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]">
+            Arcana Decision
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <div className="mb-2 text-[10px] uppercase tracking-[0.28em] text-[#6b5b44]">Energy</div>
           <Progress value={percent} />
         </div>
       </div>

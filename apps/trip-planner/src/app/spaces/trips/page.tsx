@@ -32,7 +32,7 @@ export default function TripsPage() {
 
         <section className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
-          <VoteCreateForm redirectTo="/spaces/tarot" />
+          <VoteCreateForm redirectTo="/spaces/tarot" sourceLabel="Trips" participantCount={6} />
           </div>
           <VoteSideDashboard
             title="Trip members"

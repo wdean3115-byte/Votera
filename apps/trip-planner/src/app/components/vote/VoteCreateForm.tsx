@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 
 type VoteCreateFormProps = {
   redirectTo?: string;
+  sourceLabel?: string;
+  participantCount?: number;
 };
 
-export function VoteCreateForm({ redirectTo }: VoteCreateFormProps) {
+export function VoteCreateForm({ redirectTo, sourceLabel, participantCount = 1 }: VoteCreateFormProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
@@ -21,10 +23,29 @@ export function VoteCreateForm({ redirectTo }: VoteCreateFormProps) {
     const payload = {
       title: title.trim(),
       options: filled.slice(0, 4),
+      sourceLabel: sourceLabel?.trim() || "Unknown space",
+      participantCount: Math.max(1, participantCount),
+      expiresAt: Date.now() + 30 * 60 * 1000,
       createdAt: Date.now(),
     };
 
     localStorage.setItem("votera:lastVote", JSON.stringify(payload));
+
+    const rawHistory = localStorage.getItem("votera:voteHistory");
+    let voteHistory: typeof payload[] = [];
+
+    try {
+      const parsed = JSON.parse(rawHistory ?? "[]");
+      if (Array.isArray(parsed)) {
+        voteHistory = parsed;
+      }
+    } catch {
+      // ignore parse errors
+    }
+
+    const nextHistory = [payload, ...voteHistory].slice(0, 6);
+    localStorage.setItem("votera:voteHistory", JSON.stringify(nextHistory));
+
     if (redirectTo) router.push(redirectTo);
   };
 
